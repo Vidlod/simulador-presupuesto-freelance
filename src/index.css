@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+:root {
+  /* Paper & ink palette */
+  --paper:       #F4EFE3;
+  --paper-soft:  #ECE5D3;
+  --paper-warm:  #EDE5CC;
+  --ink:         #1A2B3F;
+  --ink-soft:    rgba(26, 43, 63, 0.65);
+  --ink-faint:   rgba(26, 43, 63, 0.35);
+  --line:        rgba(26, 43, 63, 0.15);
+  --line-soft:   rgba(26, 43, 63, 0.08);
+
+  /* Terracotta accent — reserved for totals + CTAs only */
+  --accent:      #C84A30;
+  --accent-soft: rgba(200, 74, 48, 0.10);
+  --accent-glow: rgba(200, 74, 48, 0.18);
+
+  /* Fonts */
+  --display:     'Instrument Serif', Georgia, serif;
+  --sans:        'Manrope', system-ui, sans-serif;
+  --mono:        'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; background: var(--paper); }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  font-size: 16px;
+}
+#root { width: 100%; }
+
+::selection { background: var(--accent); color: var(--paper); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+a, button { font-family: inherit; color: inherit; }
+a { text-decoration: none; }
+button { background: none; border: none; cursor: pointer; }
+
+/* ─── Blueprint grid background ─── */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(26,43,63,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26,43,63,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: -1px -1px;
+}
+
+/* ─── Display + mono helpers ─── */
+.display {
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+.italic { font-style: italic; }
+.mono {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ─── Section divider ─── */
+.dashed-line {
+  border: none;
+  border-top: 1px dashed var(--line);
+  margin: 0;
+}
+
+/* ─── Reveal on scroll ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity   0.95s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 0.95s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ─── Keyframes ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes priceFlash {
+  0%   { color: var(--accent); transform: scale(1.04); }
+  100% { color: var(--ink);    transform: scale(1); }
+}
+@keyframes blink {
+  0%, 50%  { opacity: 1; }
+  51%, 100%{ opacity: 0.3; }
+}
+
+/* ─── Custom slider styling ─── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--line);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px; height: 22px;
+  background: var(--ink);
+  border: 3px solid var(--paper);
+  border-radius: 0;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px;
+  background: var(--ink);
+  border: 3px solid var(--paper);
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
