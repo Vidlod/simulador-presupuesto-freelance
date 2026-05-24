@@ -23,7 +23,7 @@ function App() {
   const set = (key, value) => {
     // Reset pages if project type changes
     if (key === 'type') {
-      const defaultPages = value === 'landing' ? 1 : value === 'site' ? 5 : value === 'webapp' ? 4 : 8
+      const defaultPages = value === 'landing' ? 1 : value === 'site' ? 5 : value === 'webapp' ? 4 : value === 'maintenance' ? 1 : 8
       setState(prev => ({ ...prev, type: value, pages: defaultPages }))
     } else {
       setState(prev => ({ ...prev, [key]: value }))
@@ -34,23 +34,23 @@ function App() {
   const result = useMemo(() => calculate(state), [state])
 
   return (
-    <div className="grid-bg" style={{ minHeight: '100vh', background: 'var(--paper)' }}>
-      <Header currency={currency} setCurrency={setCurrency} />
+    <div className="grid-bg" style={{ minHeight: '100vh', background: 'var(--background)' }}>
+      <Header />
       <Hero />
 
       <main>
         <style>{`
           .layout {
             max-width: 88rem; margin: 0 auto;
-            padding: 0 2rem 4rem;
+            padding: 0 2.5rem 4rem;
             display: grid;
-            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-            gap: 4rem;
+            grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+            gap: 3.5rem;
             align-items: flex-start;
           }
           @media (max-width: 960px) {
             .layout { grid-template-columns: 1fr; gap: 0; }
-            .layout aside { position: static !important; margin-top: 3rem; }
+            .layout aside { position: static !important; margin-top: 2rem; }
           }
           @media (max-width: 640px) {
             .layout { padding: 0 1.25rem 3rem; }
@@ -61,7 +61,7 @@ function App() {
           <div>
             <Form state={state} set={set} />
           </div>
-          <Summary result={result} currency={currency} />
+          <Summary result={result} currency={currency} setCurrency={setCurrency} />
         </div>
 
         <Result state={state} result={result} currency={currency} />

@@ -5,7 +5,7 @@
  * All hours are based on average freelance dev workload (incl. design + dev + QA + revisions).
  */
 
-export const HOURLY_RATE_USD = 38       // USD / hour (mid-tier LATAM freelance)
+export const HOURLY_RATE_USD = 10       // USD / hour (mid-tier LATAM freelance)
 export const USD_TO_COP = 4000          // approx — could be live from API later
 
 export const PROJECT_TYPES = [
@@ -31,11 +31,11 @@ export const PROJECT_TYPES = [
     note: 'Lógica, base de datos, autenticación.',
   },
   {
-    id: 'ecommerce',
-    title: 'E-commerce',
-    sub: 'Tienda online con catálogo y pagos',
-    hours: 140,
-    note: 'Carrito, pagos, gestión de productos.',
+    id: 'maintenance',
+    title: 'Mantenimiento & Soporte',
+    sub: 'Plan mensual de soporte y mejoras continuas',
+    hours: 20,
+    note: 'Actualizaciones, bugs, mejoras de rendimiento y soporte.',
   },
 ]
 
@@ -79,7 +79,7 @@ export function calculate({ type, pages, features, timeline, design }) {
   const baseHours = projectType.hours
 
   // Pages: 8% extra per additional page above the project default
-  const defaultPages = type === 'landing' ? 1 : type === 'site' ? 5 : type === 'webapp' ? 4 : 8
+  const defaultPages = type === 'landing' ? 1 : type === 'site' ? 5 : type === 'webapp' ? 4 : type === 'maintenance' ? 1 : 8
   const extraPages   = Math.max(0, pages - defaultPages)
   const pagesHours   = extraPages * (baseHours * 0.08)
 
