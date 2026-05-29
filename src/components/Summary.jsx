@@ -1,171 +1,131 @@
 import { HOURLY_RATE_USD, formatMoney } from '../data/pricing'
 
-export default function Summary({ result, currency }) {
-  const hasResult = result && result.totalHours > 0
-
-  // Currency-specific values
-  const minAmount  = currency === 'COP' ? result?.minCOP  : result?.minUSD
-  const maxAmount  = currency === 'COP' ? result?.maxCOP  : result?.maxUSD
-  const midAmount  = currency === 'COP' ? result?.totalCOP : result?.totalUSD
-  const rateAmount = currency === 'COP' ? HOURLY_RATE_USD * 4000 : HOURLY_RATE_USD
+export default function Summary({ result, currency, setCurrency }) {
+  const has = result && result.totalHours > 0
+  const mid = currency === 'COP' ? result?.totalCOP : result?.totalUSD
+  const min = currency === 'COP' ? result?.minCOP   : result?.minUSD
+  const max = currency === 'COP' ? result?.maxCOP   : result?.maxUSD
+  const rate = currency === 'COP' ? HOURLY_RATE_USD * 4000 : HOURLY_RATE_USD
 
   return (
     <>
       <style>{`
-        .summary {
-          position: sticky; top: 6rem;
-          background: var(--paper-warm);
-          border: 1px solid var(--ink);
-          padding: 2rem 1.75rem;
-          display: flex; flex-direction: column; gap: 1.5rem;
+        .sum {
+          position: sticky; top: 5rem;
+          border: 1px solid var(--fg);
+          background: var(--surface);
+          display: flex; flex-direction: column;
         }
-        .summary::before, .summary::after {
-          content: '';
-          position: absolute; width: 10px; height: 10px;
+        .sum-head {
+          padding: 0.85rem 1.25rem;
+          border-bottom: 1px solid var(--fg);
+          display: flex; justify-content: space-between; align-items: center;
+          font-size: 0.6rem; letter-spacing: 0.2em;
+          text-transform: uppercase;
         }
-        .summary::before {
-          top: -1px; left: -1px;
-          border-top: 2px solid var(--accent);
-          border-left: 2px solid var(--accent);
+        .sum-live { animation: blink 1.2s step-start infinite; }
+        .sum-body { padding: 1.5rem 1.25rem; display: flex; flex-direction: column; gap: 1.25rem; }
+        .sum-lbl { font-size: 0.6rem; color: var(--fg-3); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.45rem; }
+        .sum-price {
+          font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+          font-weight: 700; letter-spacing: -0.03em; line-height: 1;
+          color: var(--accent);
+          font-variant-numeric: tabular-nums;
+          animation: priceFlash 0.4s ease;
         }
-        .summary::after {
-          bottom: -1px; right: -1px;
-          border-bottom: 2px solid var(--accent);
-          border-right: 2px solid var(--accent);
-        }
+        .sum-range { font-size: 0.68rem; color: var(--fg-3); margin-top: 0.4rem; letter-spacing: 0.02em; }
+        .sum-divider { border: none; border-top: 1px dashed var(--line); margin: 0; }
         .sum-row {
           display: flex; justify-content: space-between; align-items: baseline;
-          padding: 0.55rem 0;
-          border-bottom: 1px dashed var(--line);
-          font-size: 0.82rem; color: var(--ink-soft);
+          padding: 0.5rem 0;
+          border-bottom: 1px dashed var(--line-2);
+          font-size: 0.75rem;
         }
-        .sum-row:last-of-type { border-bottom: none; }
-        .sum-row b {
-          font-weight: 500; color: var(--ink);
-          font-family: var(--mono); font-size: 0.78rem;
-        }
+        .sum-row:last-child { border-bottom: none; }
+        .sum-row span { color: var(--fg-2); }
+        .sum-row b { font-weight: 700; font-size: 0.7rem; letter-spacing: 0.04em; }
         .sum-empty {
-          padding: 2rem 0; text-align: center;
-          color: var(--ink-faint);
-          font-family: var(--display); font-style: italic;
-          font-size: 1.15rem; line-height: 1.4;
+          font-size: 0.8rem; color: var(--fg-3); line-height: 1.6;
+          text-align: center; padding: 1.5rem 0;
         }
-        .sum-empty::before {
-          content: '↓'; display: block;
-          font-size: 1.5rem; margin-bottom: 0.5rem;
-          opacity: 0.5;
+        .sum-cta {
+          display: flex; align-items: center; justify-content: center; gap: 0.65rem;
+          padding: 1rem 1.25rem;
+          background: var(--fg); color: var(--bg);
+          font-family: var(--mono); font-size: 0.72rem;
+          font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+          transition: background 0.15s;
+          border-top: 1px solid var(--fg);
         }
-        .sum-big {
-          font-family: var(--display);
-          font-size: clamp(2.2rem, 3.4vw, 2.8rem);
-          color: var(--accent);
-          line-height: 1; font-variant-numeric: tabular-nums;
-          letter-spacing: -0.02em;
-          animation: priceFlash 0.5s ease;
-        }
-        .sum-range {
-          font-family: var(--mono); font-size: 0.75rem;
-          color: var(--ink-soft); letter-spacing: 0.05em;
+        .sum-cta:hover { background: var(--accent); }
+        .sum-note {
+          padding: 1rem 1.25rem;
+          font-size: 0.65rem; color: var(--fg-3); line-height: 1.5;
+          border-top: 1px dashed var(--line);
         }
       `}</style>
 
-      <aside className="summary">
-        {/* Doc-style header */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between',
-          fontFamily: 'var(--mono)', fontSize: '0.62rem',
-          color: 'var(--ink-soft)', letterSpacing: '0.18em',
-        }}>
-          <span>ESTIMATE · LIVE</span>
-          <span style={{ animation: 'blink 1.4s infinite' }}>●</span>
+      <aside className="sum">
+        <div className="sum-head">
+          <span>ESTIMADO EN VIVO</span>
+          <span className="sum-live">●</span>
         </div>
 
-        <div>
-          <p style={{
-            fontFamily: 'var(--mono)', fontSize: '0.65rem',
-            color: 'var(--ink-faint)', letterSpacing: '0.15em',
-            marginBottom: '0.5rem',
-          }}>
-            COSTO ESTIMADO ({currency})
-          </p>
-
-          {hasResult ? (
-            <>
-              <div key={midAmount} className="sum-big">
-                {formatMoney(midAmount, currency)}
-              </div>
-              <p className="sum-range" style={{ marginTop: '0.65rem' }}>
-                Rango: {formatMoney(minAmount, currency)} → {formatMoney(maxAmount, currency)}
+        <div className="sum-body">
+          <div>
+            <p className="sum-lbl">COSTO ESTIMADO ({currency})</p>
+            {has ? (
+              <>
+                <div key={mid} className="sum-price">{formatMoney(mid, currency)}</div>
+                <p className="sum-range">
+                  RANGO ±15%: {formatMoney(min, currency)} → {formatMoney(max, currency)}
+                </p>
+              </>
+            ) : (
+              <p className="sum-empty">
+                Configura los pasos<br/>para ver el estimado.
               </p>
+            )}
+          </div>
+
+          {has && (
+            <>
+              <hr className="sum-divider" />
+              <div>
+                <p className="sum-lbl">DESGLOSE</p>
+                <div className="sum-row">
+                  <span>Horas estimadas</span>
+                  <b>{result.totalHours} H</b>
+                </div>
+                <div className="sum-row">
+                  <span>Tarifa / hora</span>
+                  <b>{formatMoney(rate, currency)}</b>
+                </div>
+                <div className="sum-row">
+                  <span>Plazo estimado</span>
+                  <b>{result.weeks} SEM</b>
+                </div>
+                <div className="sum-row">
+                  <span>Tipo</span>
+                  <b style={{ fontSize: '0.65rem' }}>{result.projectType}</b>
+                </div>
+              </div>
             </>
-          ) : (
-            <div className="sum-empty">
-              completa los pasos<br/>para ver el estimado
-            </div>
           )}
         </div>
 
-        {hasResult && (
-          <>
-            <hr className="dashed-line" />
-
-            <div>
-              <p style={{
-                fontFamily: 'var(--mono)', fontSize: '0.62rem',
-                color: 'var(--ink-faint)', letterSpacing: '0.15em',
-                marginBottom: '0.85rem',
-              }}>
-                DESGLOSE
-              </p>
-              <div className="sum-row">
-                <span>Horas estimadas</span>
-                <b>{result.totalHours} h</b>
-              </div>
-              <div className="sum-row">
-                <span>Tarifa por hora</span>
-                <b>{formatMoney(rateAmount, currency)}</b>
-              </div>
-              <div className="sum-row">
-                <span>Plazo estimado</span>
-                <b>{result.weeks} sem</b>
-              </div>
-              <div className="sum-row">
-                <span>Tipo de proyecto</span>
-                <b style={{ fontSize: '0.72rem' }}>{result.projectType}</b>
-              </div>
-            </div>
-
-            <hr className="dashed-line" />
-
-            <a href="#resultado"
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: '0.65rem',
-                padding: '1rem 1.25rem',
-                background: 'var(--accent)',
-                color: 'var(--paper)',
-                fontFamily: 'var(--mono)', fontSize: '0.75rem',
-                letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 500,
-                transition: 'transform 0.3s, box-shadow 0.3s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(200,74,48,0.25)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}>
-              Ver detalle completo
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-                <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
-          </>
+        {has && (
+          <a href="#resultado" className="sum-cta">
+            Ver cotización completa
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" strokeWidth="2.5"
+                strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </a>
         )}
 
-        <p style={{
-          fontSize: '0.7rem', color: 'var(--ink-faint)',
-          fontStyle: 'italic', lineHeight: 1.5,
-          marginTop: 'auto', paddingTop: '0.5rem',
-          borderTop: '1px dashed var(--line)',
-        }}>
-          * Estimación orientativa. La cotización final requiere
-          una conversación sobre el alcance específico.
+        <p className="sum-note">
+          * Estimación orientativa. La cotización final requiere una conversación sobre el alcance específico.
         </p>
       </aside>
     </>

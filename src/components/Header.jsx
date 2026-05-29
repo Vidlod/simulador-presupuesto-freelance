@@ -2,95 +2,84 @@ export default function Header({ currency, setCurrency }) {
   return (
     <>
       <style>{`
-        .head {
+        .hdr {
           position: sticky; top: 0; z-index: 50;
-          background: rgba(244, 239, 227, 0.85);
-          backdrop-filter: blur(14px) saturate(140%);
-          -webkit-backdrop-filter: blur(14px) saturate(140%);
-          border-bottom: 1px solid var(--line);
-          padding: 1rem 2rem;
+          background: var(--bg);
+          border-bottom: 1px solid var(--fg);
+          padding: 0.9rem 2rem;
           display: flex; align-items: center; justify-content: space-between;
           gap: 1rem;
         }
-        .head-logo {
-          display: flex; align-items: center; gap: 0.7rem;
-          font-family: var(--display);
-          font-size: 1.25rem; font-style: italic;
-          color: var(--ink); letter-spacing: -0.01em;
+        .hdr-logo {
+          display: flex; align-items: center; gap: 0.55rem;
+          font-size: 0.82rem; font-weight: 700;
+          letter-spacing: 0.06em; text-transform: uppercase;
         }
-        .head-mark {
-          width: 28px; height: 28px;
-          border: 1.5px solid var(--ink);
+        .hdr-mark {
+          width: 26px; height: 26px;
+          border: 1px solid var(--fg);
           display: flex; align-items: center; justify-content: center;
-          font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
-          color: var(--ink);
+          font-size: 0.65rem; font-weight: 700; letter-spacing: 0;
+          flex-shrink: 0;
         }
-        .head-meta {
-          font-family: var(--mono); font-size: 0.65rem;
-          color: var(--ink-soft); letter-spacing: 0.15em;
-          text-transform: uppercase;
+        .hdr-meta {
+          font-size: 0.6rem; color: var(--fg-3);
+          letter-spacing: 0.2em; text-transform: uppercase;
           display: none;
         }
-        .head-currency {
-          display: flex; align-items: center; gap: 0;
-          border: 1px solid var(--ink);
-          padding: 0;
+        .hdr-back {
+          font-size: 0.6rem; color: var(--fg-3);
+          letter-spacing: 0.12em; text-transform: uppercase;
+          display: none;
+          transition: color 0.15s;
         }
-        .head-currency button {
-          padding: 0.5rem 0.85rem;
-          font-family: var(--mono); font-size: 0.7rem;
-          letter-spacing: 0.1em;
-          color: var(--ink);
-          transition: background 0.25s, color 0.25s;
-          min-height: 36px;
+        .hdr-back:hover { color: var(--fg); }
+        .hdr-cur {
+          display: flex;
+          border: 1px solid var(--fg);
         }
-        .head-currency button.active {
-          background: var(--ink); color: var(--paper);
+        .hdr-cur button {
+          padding: 0.4rem 0.9rem;
+          font-family: var(--mono); font-size: 0.68rem;
+          font-weight: 500; letter-spacing: 0.1em;
+          color: var(--fg);
+          transition: background 0.12s, color 0.12s;
+          min-height: 32px;
         }
+        .hdr-cur button.on { background: var(--fg); color: var(--bg); }
         @media (min-width: 720px) {
-          .head-meta { display: inline; }
+          .hdr-meta { display: inline; }
+          .hdr-back { display: inline; }
         }
         @media (max-width: 520px) {
-          .head { padding: 0.85rem 1rem; }
-          .head-logo { font-size: 1.1rem; }
+          .hdr { padding: 0.75rem 1.25rem; }
         }
       `}</style>
-      <header className="head">
-        <a href="#" className="head-logo">
-          <span className="head-mark">E</span>
+
+      <header className="hdr">
+        <a href="#" className="hdr-logo">
+          <span className="hdr-mark">E</span>
           Estimador<span style={{ color: 'var(--accent)' }}>.</span>
         </a>
 
-        <span className="head-meta">
-          DOC · A-01 · REV 2026
-        </span>
+        <span className="hdr-meta">DOC · A-01 · REV 2026</span>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <a href="https://portfolio-david-geo.vercel.app" target="_blank" rel="noopener noreferrer"
-            style={{
-              fontFamily: 'var(--mono)', fontSize: '0.65rem',
-              letterSpacing: '0.15em', color: 'var(--ink-soft)',
-              textTransform: 'uppercase', display: 'none',
-            }}
-            className="back-link">
-            ← David Geo
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+          <a
+            href="https://portfolio-david-geo.vercel.app"
+            target="_blank" rel="noopener noreferrer"
+            className="hdr-back">
+            ← DAVID GEO
           </a>
-          <div className="head-currency" role="group" aria-label="Currency selector">
-            <button
-              onClick={() => setCurrency('USD')}
-              className={currency === 'USD' ? 'active' : ''}>
-              USD
-            </button>
-            <button
-              onClick={() => setCurrency('COP')}
-              className={currency === 'COP' ? 'active' : ''}>
-              COP
-            </button>
+          <div className="hdr-cur" role="group" aria-label="Moneda">
+            {['USD', 'COP'].map(c => (
+              <button key={c} className={currency === c ? 'on' : ''}
+                onClick={() => setCurrency(c)}>
+                {c}
+              </button>
+            ))}
           </div>
         </div>
-        <style>{`
-          @media (min-width: 720px) { .back-link { display: inline !important; } }
-        `}</style>
       </header>
     </>
   )

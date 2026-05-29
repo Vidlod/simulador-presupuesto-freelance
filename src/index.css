@@ -1,149 +1,86 @@
 @import "tailwindcss";
 
 :root {
-  /* Paper & ink palette */
-  --paper:       #F4EFE3;
-  --paper-soft:  #ECE5D3;
-  --paper-warm:  #EDE5CC;
-  --ink:         #1A2B3F;
-  --ink-soft:    rgba(26, 43, 63, 0.65);
-  --ink-faint:   rgba(26, 43, 63, 0.35);
-  --line:        rgba(26, 43, 63, 0.15);
-  --line-soft:   rgba(26, 43, 63, 0.08);
-
-  /* Terracotta accent — reserved for totals + CTAs only */
-  --accent:      #C84A30;
-  --accent-soft: rgba(200, 74, 48, 0.10);
-  --accent-glow: rgba(200, 74, 48, 0.18);
-
-  /* Fonts */
-  --display:     'Instrument Serif', Georgia, serif;
-  --sans:        'Manrope', system-ui, sans-serif;
-  --mono:        'JetBrains Mono', monospace;
+  --bg:      #F8F8F6;
+  --surface: #FFFFFF;
+  --fg:      #0D0D0D;
+  --fg-2:    #555555;
+  --fg-3:    #A8A8A8;
+  --line:    #D0D0D0;
+  --line-2:  #EBEBEB;
+  --accent:  #C84A30;
+  --mono:    'JetBrains Mono', monospace;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
-html { scroll-behavior: smooth; background: var(--paper); }
+html { scroll-behavior: smooth; background: var(--bg); }
 
 body {
-  font-family: var(--sans);
-  background: var(--paper);
-  color: var(--ink);
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--fg);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  font-size: 15px;
+  line-height: 1.55;
   font-weight: 400;
-  letter-spacing: -0.005em;
-  font-size: 16px;
 }
 #root { width: 100%; }
-
-::selection { background: var(--accent); color: var(--paper); }
-
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--paper); }
-::-webkit-scrollbar-thumb { background: var(--line); border-radius: 0; }
-::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
 
 a, button { font-family: inherit; color: inherit; }
 a { text-decoration: none; }
 button { background: none; border: none; cursor: pointer; }
 
-/* ─── Blueprint grid background ─── */
-.grid-bg {
-  background-image:
-    linear-gradient(to right, rgba(26,43,63,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(26,43,63,0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  background-position: -1px -1px;
-}
+::selection { background: var(--accent); color: #FAFAFA; }
 
-/* ─── Display + mono helpers ─── */
-.display {
-  font-family: var(--display);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-}
-.italic { font-style: italic; }
-.mono {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line); }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-3); }
 
-/* ─── Section divider ─── */
-.dashed-line {
-  border: none;
-  border-top: 1px dashed var(--line);
-  margin: 0;
+/* ─── Slider ─── */
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 1px;
+  background: var(--fg);
+  outline: none; cursor: pointer;
 }
-
-/* ─── Reveal on scroll ─── */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity   0.95s cubic-bezier(0.19, 1, 0.22, 1),
-    transform 0.95s cubic-bezier(0.19, 1, 0.22, 1);
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 20px; height: 20px;
+  background: var(--fg);
+  border: 2px solid var(--bg);
+  outline: 1px solid var(--fg);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.12s;
 }
-.reveal.in { opacity: 1; transform: translateY(0); }
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--accent);
+  outline-color: var(--accent);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px; height: 20px;
+  background: var(--fg);
+  border: 2px solid var(--bg);
+  border-radius: 0; cursor: pointer;
+}
 
 /* ─── Keyframes ─── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes fadeIn {
-  from { opacity: 0; } to { opacity: 1; }
-}
 @keyframes priceFlash {
-  0%   { color: var(--accent); transform: scale(1.04); }
-  100% { color: var(--ink);    transform: scale(1); }
+  0%, 40% { opacity: 0.4; }
+  100%     { opacity: 1; }
 }
 @keyframes blink {
-  0%, 50%  { opacity: 1; }
-  51%, 100%{ opacity: 0.3; }
+  0%, 49% { opacity: 1; }
+  50%,100% { opacity: 0; }
 }
 
-/* ─── Custom slider styling ─── */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 2px;
-  background: var(--line);
-  outline: none;
-  cursor: pointer;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 22px; height: 22px;
-  background: var(--ink);
-  border: 3px solid var(--paper);
-  border-radius: 0;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
-  box-shadow: 0 0 0 1px var(--ink);
-}
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-  background: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
-}
-input[type="range"]::-moz-range-thumb {
-  width: 22px; height: 22px;
-  background: var(--ink);
-  border: 3px solid var(--paper);
-  border-radius: 0;
-  cursor: pointer;
-  box-shadow: 0 0 0 1px var(--ink);
-}
-
-/* Reduced motion */
+/* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

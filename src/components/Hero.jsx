@@ -3,108 +3,82 @@ export default function Hero() {
     year: 'numeric', month: '2-digit', day: '2-digit',
   })
 
+  const steps = [
+    ['01', 'TIPO'],
+    ['02', 'TAMAÑO'],
+    ['03', 'FUNCIONES'],
+    ['04', 'PLAZO'],
+    ['05', 'DISEÑO'],
+    ['→',  'TOTAL'],
+  ]
+
   return (
-    <>
-      <style>{`
-        .hero {
-          padding: 5rem 2rem 4rem;
-          max-width: 88rem; margin: 0 auto;
-          position: relative;
-        }
-        .hero-doc-meta {
-          display: flex; justify-content: space-between;
-          margin-bottom: 4rem;
-          font-family: var(--mono); font-size: 0.65rem;
-          color: var(--ink-soft); letter-spacing: 0.18em;
-          text-transform: uppercase;
-          border-top: 1px solid var(--ink);
-          border-bottom: 1px solid var(--line);
-          padding: 0.85rem 0;
-        }
-        .hero-h1 {
-          font-size: clamp(2.8rem, 8vw, 7rem);
-          color: var(--ink);
-          margin-bottom: 2.5rem;
-          max-width: 18ch;
-        }
-        .hero-h1 em {
-          font-style: italic;
-          color: var(--accent);
-        }
-        .hero-sub {
-          font-family: var(--sans); font-size: clamp(1rem, 1.5vw, 1.15rem);
-          color: var(--ink-soft); max-width: 40rem;
-          line-height: 1.6; margin-bottom: 3rem;
-        }
-        .hero-steps {
-          display: flex; gap: 0.85rem; flex-wrap: wrap;
-          font-family: var(--mono); font-size: 0.7rem;
-          color: var(--ink-soft); letter-spacing: 0.12em;
-          text-transform: uppercase;
-        }
-        .hero-step {
-          display: inline-flex; align-items: center; gap: 0.4rem;
-          padding: 0.5rem 0.85rem;
-          border: 1px solid var(--line);
-          background: rgba(244,239,227,0.7);
-        }
-        .hero-step-n { color: var(--accent); }
+    <section style={{
+      maxWidth: '88rem', margin: '0 auto',
+      padding: 'clamp(3rem, 6vw, 5rem) 2rem clamp(2.5rem, 5vw, 4rem)',
+      borderBottom: '1px solid var(--line)',
+    }}>
 
-        /* Corner crosshair marks (architectural) */
-        .crosshair {
-          position: absolute; width: 14px; height: 14px;
-          pointer-events: none; opacity: 0.7;
-        }
-        .crosshair::before, .crosshair::after {
-          content: ''; position: absolute; background: var(--ink);
-        }
-        .crosshair::before { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
-        .crosshair::after  { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+      {/* Document meta */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap',
+        gap: '0.5rem',
+        fontSize: '0.6rem', color: 'var(--fg-3)',
+        letterSpacing: '0.2em', textTransform: 'uppercase',
+        paddingBottom: '0.85rem', marginBottom: '3.5rem',
+        borderBottom: '1px solid var(--line-2)',
+      }}>
+        <span>SHEET 01 / 02</span>
+        <span>BUDGET ESTIMATE</span>
+        <span>{today}</span>
+      </div>
 
-        @media (max-width: 640px) {
-          .hero { padding: 3rem 1.25rem 2.5rem; }
-          .hero-doc-meta { margin-bottom: 2.5rem; gap: 0.75rem; flex-wrap: wrap; }
-          .hero-sub { margin-bottom: 2rem; }
-        }
-      `}</style>
+      {/* Headline */}
+      <h1 style={{
+        fontSize: 'clamp(2rem, 6.5vw, 5rem)',
+        fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.0,
+        maxWidth: '16ch', marginBottom: '1.75rem',
+        animation: 'fadeUp 0.7s 0.1s both',
+      }}>
+        ¿Cuánto cuesta<br/>
+        tu <span style={{ color: 'var(--accent)' }}>próximo<br/>proyecto</span> web?
+      </h1>
 
-      <section className="hero">
-        <span className="crosshair" style={{ top: '2rem', left: '0.5rem' }} />
-        <span className="crosshair" style={{ top: '2rem', right: '0.5rem' }} />
+      <p style={{
+        fontSize: '0.85rem', color: 'var(--fg-2)', lineHeight: 1.7,
+        maxWidth: '50rem', marginBottom: '3rem',
+        animation: 'fadeUp 0.7s 0.22s both',
+      }}>
+        Estimación instantánea basada en alcance, funcionalidades y plazo.
+        Configura los parámetros y obtén un rango de presupuesto antes de
+        solicitar una cotización formal.
+      </p>
 
-        <div className="hero-doc-meta">
-          <span>SHEET 01 / 02</span>
-          <span>BUDGET ESTIMATE</span>
-          <span>{today}</span>
-        </div>
-
-        <h1 className="display hero-h1" style={{
-          animation: 'fadeUp 1s 0.1s cubic-bezier(0.19,1,0.22,1) forwards', opacity: 0,
-        }}>
-          ¿Cuánto cuesta tu <em>próximo</em> proyecto web?
-        </h1>
-
-        <p className="hero-sub" style={{
-          animation: 'fadeUp 1s 0.3s ease forwards', opacity: 0,
-        }}>
-          Una estimación instantánea basada en alcance, funcionalidades
-          y plazo. Diseñada para que sepas en qué rango se mueve tu proyecto
-          antes de pedir una cotización formal.
-        </p>
-
-        <div className="hero-steps" style={{
-          animation: 'fadeUp 1s 0.5s ease forwards', opacity: 0,
-        }}>
-          <span className="hero-step"><span className="hero-step-n">01</span> Tipo</span>
-          <span className="hero-step"><span className="hero-step-n">02</span> Tamaño</span>
-          <span className="hero-step"><span className="hero-step-n">03</span> Funciones</span>
-          <span className="hero-step"><span className="hero-step-n">04</span> Plazo</span>
-          <span className="hero-step"><span className="hero-step-n">05</span> Diseño</span>
-          <span className="hero-step" style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}>
-            <span className="hero-step-n">→</span> Total
-          </span>
-        </div>
-      </section>
-    </>
+      {/* Step indicators */}
+      <div style={{
+        display: 'flex', flexWrap: 'wrap',
+        animation: 'fadeUp 0.7s 0.36s both',
+      }}>
+        {steps.map(([n, label], i) => {
+          const isLast = n === '→'
+          return (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', gap: '0.45rem',
+              padding: '0.5rem 1rem',
+              border: `1px solid ${isLast ? 'var(--accent)' : 'var(--line)'}`,
+              marginRight: '-1px', marginBottom: '-1px',
+              fontSize: '0.65rem', letterSpacing: '0.12em',
+              color: isLast ? 'var(--accent)' : 'var(--fg-2)',
+            }}>
+              <span style={{
+                fontWeight: 700,
+                color: isLast ? 'var(--accent)' : 'var(--fg)',
+              }}>{n}</span>
+              {label}
+            </div>
+          )
+        })}
+      </div>
+    </section>
   )
 }
